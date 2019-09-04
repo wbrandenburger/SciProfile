@@ -2,13 +2,17 @@
 #   PSUtils.psm1 ------------------------------------------------------------
 # ===========================================================================
 
-#   psutils -----------------------------------------------------------------
+#   settings ----------------------------------------------------------------
 # ---------------------------------------------------------------------------
+$path = $MyInvocation.MyCommand.Path
+$name = [System.IO.Path]::GetFileNameWithoutExtension($path)
 $Module = New-Object -TypeName PSObject -Property @{
-    Name = "PSUtils"
-    Dir =  Split-Path -Path $MyInvocation.MyCommand.Path -Parent
+    Name = $name
+    Dir =  Split-Path -Path $path -Parent
 }
 
+#   configuration -----------------------------------------------------------
+# ---------------------------------------------------------------------------
 @(
     @{  # manifest 
         Name="Manifest"
@@ -24,8 +28,4 @@ $Module = New-Object -TypeName PSObject -Property @{
 
 #   functions ---------------------------------------------------------------
 # ---------------------------------------------------------------------------
-
-# load all sets of public and private functions into the module scope
-    Get-ChildItem -Path $Module.FunctionsDir -Filter "*.ps1" | ForEach-Object {
-        . $_.FullName
-}
+. $(Join-Path -Path $Module.Dir -ChildPath "$($Module.Name)_Functions.ps1")

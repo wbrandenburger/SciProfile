@@ -20,7 +20,11 @@ Function Prompt {
         Write-Host " " -NoNewline -ForegroundColor "Gray"
     }
 
-    Write-PromptEnvStatus -Env "Venv" -Value (Split-Path $Env:VIRTUAL_ENV -leaf)
+    If ((Get-Module).Name -contains "PSVirtualEnv") {   # displays git status
+        Write-VirtualEnvStatus
+        Write-Host " " -NoNewline -ForegroundColor "Gray"
+    }
+
     Write-PromptEnvStatus -Env "Papis" -Value $Env:PAPIS_LIB
 }
 

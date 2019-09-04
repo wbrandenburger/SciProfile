@@ -2,14 +2,6 @@
 #   SciProfile_Environment.ps1 ----------------------------------------------
 # ===========================================================================
 
-#   environment ---------------------------------------------------------------
+#   environment -------------------------------------------------------------
 # ---------------------------------------------------------------------------
-# @(
-#     @{  #  pythonhome environment variable
-#         Name="EnvPython"
-#         Value="PYTHONHOME"
-#     }
-# ) | ForEach-Object {
-#     $SciPofile | Add-Member -MemberType NoteProperty -Name $_.Name -Value $_.Value
-# }
     

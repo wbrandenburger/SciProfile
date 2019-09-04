@@ -62,8 +62,6 @@ function New-ConfigurationFile {
         $project_name = "Project"
 
         $project_file = Get-ConfigurationFile -Type $project_name
-        $project_json = $(ConvertTo-Json $project_list)
-
         if (Test-Path -Path $project_file) {
             Remove-Item -Path $project_file -Force
         }
@@ -74,6 +72,7 @@ function New-ConfigurationFile {
             $project_list += $fileData | Select-Object -Property $SciProfile.Format
         }
 
+        $project_json = $(ConvertTo-Json $project_list)
         Out-File -FilePath $project_file -InputObject $project_json
 
         return $project_file
