@@ -42,7 +42,7 @@ function Import-PSMModule {
         Write-FormattedProcess -Message "Begin to import profile '$Profile'" -Module $SciProfile.Name
         $profiles | Select-Object -ExpandProperty $Profile  | ForEach-Object {
             Write-FormattedMessage -Type "Import" -Message $_ -Color Cyan -Module $SciProfile.Name
-            Import-Module -Name $_
+            Import-Module -Name $_ -Scope "Global"
         }
 
         if ($VerbosePreference){
