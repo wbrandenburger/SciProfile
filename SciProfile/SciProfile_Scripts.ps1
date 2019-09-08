@@ -4,14 +4,11 @@
 
 #   import ------------------------------------------------------------------
 # ---------------------------------------------------------------------------
-$path = Join-Path -Path $(Split-Path -Path $MyInvocation.MyCommand.Path -Parent)  -ChildPath "Modules"
-Get-Childitem -Path $path -Directory | Select-Object -ExpandProperty FullName | ForEach-Object {
-    Import-Module -Name $_ -Scope Local
-}
+using namespace System.Management.Automation
 
 #   validation ---------------------------------------------------------------
 # ----------------------------------------------------------------------------
-Class ValidatePapisProject: System.Management.Automation.IValidateSetValuesGenerator {
+Class ValidatePapisProject: IValidateSetValuesGenerator {
     [String[]] GetValidValues() {
         return [String[]] (Get-ValidateProjectType -Type "Papis")
     }
@@ -19,8 +16,16 @@ Class ValidatePapisProject: System.Management.Automation.IValidateSetValuesGener
 
 #   validation ---------------------------------------------------------------
 # ----------------------------------------------------------------------------
-Class ValidateVirtualEnv: System.Management.Automation.IValidateSetValuesGenerator {
+Class ValidateVirtualEnv: IValidateSetValuesGenerator {
     [String[]] GetValidValues() {
         return [String[]] (Get-ValidateVirtualEnv)
+    }
+}
+
+#   validation ---------------------------------------------------------------
+# ----------------------------------------------------------------------------
+Class ValidatePSModuleProject: IValidateSetValuesGenerator {
+    [String[]] GetValidValues() {
+        return [String[]] (Get-ValidateProjectType -Type "PSModule")
     }
 }

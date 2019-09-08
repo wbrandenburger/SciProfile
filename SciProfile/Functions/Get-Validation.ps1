@@ -14,6 +14,10 @@ function Get-ValidateProjectType {
         System.String[]. Virtual environments
     #>
 
+    [CmdletBinding(PositionalBinding=$True)]
+    
+    [OutputType([System.String[]])]
+
     Param(
         [Parameter(Position=1, HelpMessage="Existing project type.")]
         [System.String] $Type="Project"

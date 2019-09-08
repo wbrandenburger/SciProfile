@@ -13,7 +13,7 @@
 RootModule = "SciProfile.psm1"
 
 # Version number of this module.
-ModuleVersion = "0.1.4"
+ModuleVersion = "0.1.5"
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -90,11 +90,11 @@ FunctionsToExport = @(
     "Open-ProjectWorkspace",
     "Open-ProjectFileExplorer",
     "Open-ProjectBrowser",
-    "Import-FunctionSci",
-    "Import-ModuleSci",
-    "Remove-ModuleSci",
-    "Import-RepositorySci",
-    "Prompt"
+    "Import-PSMFunction",
+    "Import-PSMModule",
+    "Remove-PSMModule",
+    "Import-PSMRepository",
+    "Install-PSMRepository"
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.

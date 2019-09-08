@@ -2,17 +2,9 @@
 #   Manage-Module.ps1 --------------------------------------------------------
 # ============================================================================
 
-#   validation ---------------------------------------------------------------
-# ----------------------------------------------------------------------------
-Class ValidatePSModuleAlias: System.Management.Automation.IValidateSetValuesGenerator {
-    [String[]] GetValidValues() {
-        return [String[]] (Get-ProjectList -Unformatted | Where-Object {$_.Type -eq "psmodule"} | Select-Object -ExpandProperty Alias)
-    }
-}
-
 #   function -----------------------------------------------------------------
 # ----------------------------------------------------------------------------
-function Import-FunctionSci {
+function Import-PSMFunction {
 
     [CmdletBinding(PositionalBinding=$True)]
     
@@ -29,7 +21,7 @@ function Import-FunctionSci {
 
 #   function -----------------------------------------------------------------
 # ----------------------------------------------------------------------------
-function Import-ModuleSci {
+function Import-PSMModule {
     
     [CmdletBinding(PositionalBinding=$True)]
     
@@ -62,7 +54,7 @@ function Import-ModuleSci {
 
 #   function -----------------------------------------------------------------
 # ----------------------------------------------------------------------------
-function Remove-ModuleSci {
+function Remove-PSMModule {
     
     [CmdletBinding(PositionalBinding=$True)]
     
@@ -91,14 +83,14 @@ function Remove-ModuleSci {
 
 #   function -----------------------------------------------------------------
 # ----------------------------------------------------------------------------
-function Import-RepositorySci {
+function Import-PSMRepository {
 
     [CmdletBinding(PositionalBinding=$True)]
     
     [OutputType([PSCustomObject])]
 
     Param(
-        [ValidateSet([ValidatePSModuleAlias])]
+        [ValidateSet([ValidatePSModuleProject])]
         [Parameter(Position=1, HelpMessage="Name or alias of an project.")]
         [System.String] $Name
     )
@@ -124,3 +116,31 @@ function Import-RepositorySci {
         }
     }
 }
+
+#   function -----------------------------------------------------------------
+# ----------------------------------------------------------------------------
+function Install-PSMRepository {
+
+    [CmdletBinding(PositionalBinding=$True)]
+    
+    [OutputType([PSCustomObject])]
+
+    Param(
+        [ValidateSet([ValidatePSModuleProject])]
+        [Parameter(Position=1, HelpMessage="Name or alias of an project.")]
+        [System.String] $Name
+    )
+
+    Process {
+        
+        Import-PSMRepository -Name $Name
+
+        Start-Process -FilePath "pwsh" -Wait -NoNewWindow
+
+        $module = Select-Project -Name $Name -Property "Name" -Type "PSModule"
+        Import-Module $module -Scope "Global"
+    }
+}
+
+
+
