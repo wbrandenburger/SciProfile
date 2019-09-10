@@ -7,6 +7,7 @@
 
 # define aliases for specific function
 @(
+    @{ Name = "activate-sci";  Value = "ActivateSciProfileAutocompletion"}
     @{ Name = "cdx";  Value = "Set-ProjectLocation"}
     @{ Name = "exx";  Value = "Open-ProjectFileExplorer"}
     @{ Name = "dirx"; Value = "Get-ProjectLocation"}
@@ -16,6 +17,6 @@
     @{ Name = "vsx";  Value = "Open-ProjectWorkspace"}
     
 ) | ForEach-Object {
-    Set-Alias -Name $_.Name -Value $_.Value
+    New-Alias -Name $_.Name -Value $_.Value
 }
     

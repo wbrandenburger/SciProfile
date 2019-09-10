@@ -14,18 +14,16 @@ $Module = New-Object -TypeName PSObject -Property @{
 
 #   configuration -----------------------------------------------------------
 # ---------------------------------------------------------------------------
-New-ProjectConfigDirs -Name $Module.Name.toLower()
+$module_format = Get-Content -Path (Join-Path -Path $Module.Dir -ChildPath "module_format.json") | ConvertFrom-Json 
+Format-JsonContent -Content $module_format -Substitution $Module | ForEach-Object{
+    $Module | Add-Member -MemberType NoteProperty -Name $_.Name -Value $_.Value
+}
 
-. $(Join-Path -Path $Module.Dir -ChildPath "$($Module.Name)_Default.ps1")
 . $(Join-Path -Path $Module.Dir -ChildPath "$($Module.Name)_Config.ps1")
 
 #   functions ---------------------------------------------------------------
 # ---------------------------------------------------------------------------
 . $(Join-Path -Path $Module.Dir -ChildPath "$($Module.Name)_Functions.ps1")
-
-#   environment -------------------------------------------------------------
-# ---------------------------------------------------------------------------
-. $(Join-Path -Path $Module.Dir -ChildPath "$($Module.Name)_Environment.ps1")
 
 #   aliases -----------------------------------------------------------------
 # ---------------------------------------------------------------------------

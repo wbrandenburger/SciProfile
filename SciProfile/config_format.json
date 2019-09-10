@@ -1,0 +1,54 @@
+[
+    {
+        "Id" : "WorkDir", 
+        "Field" : "work-dir", 
+        "Section" : "user", 
+        "Default" : "%(WorkDir)s",
+        "Required" : true,
+        "Folder" : true
+    },
+    {
+        "Id" : "ConfigDir", 
+        "Field" : "config-dir", 
+        "Section" : "user", 
+        "Default" : "%(WorkDir)s\\config",
+        "Required" : true,
+        "Folder" : true
+    },
+    {
+        "Id" : "ScriptDir", 
+        "Field" : "scripts-dir", 
+        "Section" : "user", 
+        "Default" : "%(WorkDir)s\\scripts",
+        "Required" : true,
+        "Folder" : true
+    },
+    {
+        "Id" : "ProjectDir", 
+        "Field" : "project-dir", 
+        "Section" : "user", 
+        "Default" : "%(WorkDir)s\\project",
+        "Required" : true,
+        "Folder" : true
+    },
+    {
+        "Id" : "LocalDir", 
+        "Field" : "local-dir", 
+        "Section" : "user", 
+        "Default" : "%(WorkDir)s\\.temp",
+        "Required" : true,
+        "Folder" : true
+    },
+    {
+        "Id" : "Import",
+        "Field" : "import-module", 
+        "Section" : "user", 
+        "Default" : "%(WorkDir)s\\config\\import.json"
+    },
+    {
+        "Id" : "ModuleDir",
+        "Field" : "module-dir", 
+        "Section" : "sciprofile", 
+        "Default" : ""
+    }
+]

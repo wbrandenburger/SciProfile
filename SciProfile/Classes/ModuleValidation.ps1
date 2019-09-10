@@ -1,5 +1,5 @@
 # ===========================================================================
-#   SciProfile_Scripts.psm1 -----------------------------------------------
+#   ModuleValidation.ps1 ----------------------------------------------------
 # ===========================================================================
 
 #   import ------------------------------------------------------------------
@@ -10,7 +10,7 @@ using namespace System.Management.Automation
 # ----------------------------------------------------------------------------
 Class ValidatePapisProject: IValidateSetValuesGenerator {
     [String[]] GetValidValues() {
-        return [String[]] (Get-ValidateProjectType -Type "Papis")
+        return [String[]] (ValidateSciProfileProjectType -Type "Papis")
     }
 }
 
@@ -18,6 +18,6 @@ Class ValidatePapisProject: IValidateSetValuesGenerator {
 # ----------------------------------------------------------------------------
 Class ValidatePSModuleProject: IValidateSetValuesGenerator {
     [String[]] GetValidValues() {
-        return [String[]] (Get-ValidateProjectType -Type "PSModule")
+        return [String[]] (ValidateSciProfileProjectType -Type "PSModule")
     }
 }

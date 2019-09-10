@@ -13,7 +13,7 @@
 RootModule = "SciProfile.psm1"
 
 # Version number of this module.
-ModuleVersion = "0.2.0"
+ModuleVersion = "0.3.0"
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -57,17 +57,23 @@ RequiredModules = @(
         ModuleName = "PSIni"; 
         ModuleVersion = "3.1.2"; 
     }
-    # @{
-    #     ModuleName = "PSVirtualEnv"; 
-    #     ModuleVersion = "0.3.6"; 
-    # }
+    @{
+        ModuleName = "PSModuleUtils"; 
+        ModuleVersion = "1.0.0"; 
+        GUID = "08a1d5c7-0d9c-4cd2-b8e0-90ee1318a1a7";
+    }
+    @{
+        ModuleName = "PSPocs"; 
+        ModuleVersion = "0.4"; 
+        GUID = "b20a743f-e2c0-4be9-9b96-076a7c6dad6a";
+    }
 )
 
-# Assemblies that must be loaded prior to importing this module
+# Assembslies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
 
 # Script files (.ps1) that are run in the caller"s environment prior to importing this module.
-ScriptsToProcess = @("SciProfile_Scripts.ps1")
+ScriptsToProcess = @()
 
 # Type files (.ps1xml) to be loaded when importing this module
 # TypesToProcess = @()
@@ -76,10 +82,11 @@ ScriptsToProcess = @("SciProfile_Scripts.ps1")
 # FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-# NestedModules = @()
+NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
+    "ActivateSciProfileAutocompletion",
     "Get-ProjectList",
     "New-ConfigurationFile",
     "Get-ProjectLocation",
@@ -95,6 +102,7 @@ FunctionsToExport = @(
     "Remove-PSMModule",
     "Import-PSMRepository",
     "Install-PSMRepository"
+    "ValidateSciProfileProjectType"
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
@@ -105,6 +113,7 @@ VariablesToExport = "SciProfile"
 
 # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
 AliasesToExport = @(
+    "activate-sci"
     "cdx",
     "exx",
     "dirx",

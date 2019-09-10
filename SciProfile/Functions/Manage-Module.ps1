@@ -33,15 +33,16 @@ function Import-PSMModule {
     )
 
     Process {
-        if ((New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)){
-            $Profile = "Admin"
-        }
+        # if ((New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)){
+        #     $Profile = "Admin"
+        # }
 
         $profiles = Get-Content $SciProfile.Import | ConvertFrom-Json
 
         Write-FormattedProcess -Message "Begin to import profile '$Profile'" -Module $SciProfile.Name
-        $profiles | Select-Object -ExpandProperty $Profile  | ForEach-Object {
+        $profiles | Select-Object -ExpandProperty $Profile | ForEach-Object {
             Write-FormattedMessage -Type "Import" -Message $_ -Color Cyan -Module $SciProfile.Name
+
             Import-Module -Name $_ -Scope "Global"
         }
 
@@ -136,9 +137,6 @@ function Install-PSMRepository {
         Import-PSMRepository -Name $Name
 
         Start-Process -FilePath "pwsh" -Wait -NoNewWindow
-
-        $module = Select-Project -Name $Name -Property "Name" -Type "PSModule"
-        Import-Module $module -Scope "Global"
     }
 }
 

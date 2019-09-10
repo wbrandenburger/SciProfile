@@ -5,92 +5,69 @@
 #   configuration -----------------------------------------------------------
 # ---------------------------------------------------------------------------
 
-New-ProjectConfigDirs -Name $Module.Name.toLower()
-
-# search for the local configuration file
-if (-not $(Test-Path $Module.Config)) {
-    $default_config_string | Out-File -FilePath $Module.Config -Force
-}
-
-@(
-    @{  # manifest 
-        Name="Manifest"
-        Value=Join-Path -Path $Module.Dir -ChildPath ($Module.Name + ".psd1")
-    }
-    @{  # directory of functions
-        Name="FunctionsDir"
-        Value=Join-Path -Path $Module.Dir -ChildPath "Functions"
-    }
-    @{  # directory of functions
-        Name="TestsDir"
-        Value=Join-Path -Path $Module.Dir -ChildPath "Tests"
-    }
-    @{  # configuration file and content of configuration file
-        Name="ConfigContent" 
-        Value=Get-IniContent -FilePath $Module.Config
-    }
-) | ForEach-Object {
-    $Module | Add-Member -MemberType NoteProperty -Name $_.Name -Value $_.Value
-}
-
 # set the default path where the virtual environments are located and their subdirectories defined in the configuration file
 $SciProfile= New-Object -TypeName PSObject -Property @{
     Name = $Module.Name
+    WorkDir = Get-ConfigProjectDir -Name $Module.Name
 }
 
-$work_dir = Get-ConfigProjectDir -Name $Module.Name
-@( 
-    @{
-        Name="work-dir"; Section="user"; Field="WorkDir"; 
-        Default=$work_dir
-    }
-    @{
-        Name="config-dir"; Section="user"; Field="ConfigDir"; 
-        Default=$(Join-Path -Path $work_dir -ChildPath "config")
-    }
-    @{
-        Name="scripts-dir"; Section="user"; Field="ScriptDir"; 
-        Default=$(Join-Path -Path $work_dir -ChildPath "scripts")
-    }
-    @{
-        Name="project-dir"; Section="user"; Field="ProjectDir"; 
-        Default=$(Join-Path -Path $work_dir -ChildPath "project")
-    }
-    @{
-        Name="local-dir"; Section="user"; Field="LocalDir"
-        Default=$(Join-Path -Path $work_dir -ChildPath ".temp")
-    }
-    @{
-        Name="module-dir"; Section="sciprofile"; Field="ModuleDir"
-        Default=$(Join-Path -Path $work_dir -ChildPath "modules")
-    }
-) | ForEach-Object {
-    $content = $Module.ConfigContent[$_.Section][$_.Name]
+New-ProjectConfigDirs -Name $Module.Name.ToLower()
+if (-not $(Test-Path $Module.Config)) {
+    Get-Content -Path (Join-Path -Path $Module.Dir -ChildPath "default_config.ini") | Out-File -FilePath $Module.Config -Force
+}
+$config_raw = Get-IniContent -FilePath $Module.Config -IgnoreComments
+$config_content = Format-IniContent -Content $config_raw -Substitution $SciProfile
 
-    if (-not $content -or -not $(Test-Path -Path $content)) {
-        
-        $path = $content
-        if (-not $content) {
-            $path = $_.Default
-            $Module.ConfigContent | Set-IniContent -Sections $_.Section -NameValuePairs @{ $_.Name = $_.Default}
+# read module settings from module format file
+$config_format = Get-Content -Path $Module.ConfigFormat | ConvertFrom-Json
+
+Format-JsonContent -Content $config_format -Substitution $SciProfile | ForEach-Object{
+    
+    # write-host $_.Field $_.Default $config_content[$_.Section][$_.Field]
+
+    $break = $False
+    if ($config_content.Keys -match $_.Section){
+        $sec_keys = $config_content[$_.Section].Keys
+        if ($sec_keys -match $_.Name){
+            
+            $value = $config_content[$_.Section][$_.Field]
+            if (-not $value) {
+                $value = $_.Default          
+            }
+
+            if ($_.Id -in $SciProfile.PSObject.Properties.Name) {
+                $SciProfile.($_.Id) = $value
+            } else{
+                $SciProfile | Add-Member -MemberType NoteProperty -Name $_.Id -Value $value
+            }
+
+            #write-host $_.Id $value
+
+            if ($_.Required){
+                if ($_.Folder -and $value -and -not $(Test-Path $value)) {
+                    Write-FormattedWarning -Message "The path $($value) defined in field $($_.Field) of the module configuration file can not be found. Default directory $($value) will be created." -Module $Module.Name
+                    New-Item -Path $value -ItemType Directory
+                }
+                elseif (-not $_.Folder -and -not $value ) {
+                   Write-FormattedWarning -Message "Field $($_.Field) is not defined in configuration file and should be set for full module functionality." -Module $Module.Name
+                }
+            }
+        } else {
+            $break = $False
         }
-
-        Write-FormattedWarning -Message "The path $($content) defined in field $($_.Name) of the module configuration file can not be found. Default directory $($path) will be created." -Module $Module.Name
-
-        $content = $path
-        If (-not $(Test-Path $path)) {
-            New-Item -Path $path -ItemType Directory
-        }
+    } else {
+        $break = $False
     }
 
-    $SciProfile  | Add-Member -MemberType NoteProperty -Name $_.Field -Value $content
+    if($break){
+        if ($_.Required){
+            Write-FormattedError -Message "Module could not be loaded due to configuration problems."
+
+            return
+        }
+    }
 }
 
-@( 
-    @{Field="Format"; Value=@("Name", "Alias", "Type", "Description", "Folder", "Url")}
-    @{Field="Import"; Value=Join-Path -Path $SciProfile.ConfigDir -ChildPath "import.json"}
-) | ForEach-Object {
-    $SciProfile  | Add-Member -MemberType NoteProperty -Name $_.Field -Value  $_.Value
-}
+Write-FormattedMessage -Message "Module config file: $($Module.Config)" -Module $SciProfile.Name -Color DarkYellow
 
-$Module.ConfigContent | Out-IniFile -FilePath $Module.Config -Force
+Write-FormattedMessage -Message "Working directory: $($SciProfile.WorkDir)" -Module $SciProfile.Name -Color DarkYellow
