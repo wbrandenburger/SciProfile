@@ -21,13 +21,13 @@ function ActivateSciProfileAutocompletion {
     Param()
 
     Process {
-        
+
         $script_list = @(
             ActivateVirtualEnvAutocompletion
             ActivatePocsAutocompletion
             $(Get-Command $(Join-Path -Path $Module.ClassDir -ChildPath "ModuleValidation.ps1") | Select-Object -ExpandProperty ScriptBlock)
         )
-        
+
         return Join-ScriptBlock -Scripts $script_list
     }
 }
