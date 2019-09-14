@@ -15,7 +15,8 @@
     @{ Name = "fox";  Value = "Open-ProjectBrowser"}    
     @{ Name = "lsx";  Value = "Get-ProjectChildItem"}
     @{ Name = "vsx";  Value = "Open-ProjectWorkspace"}
-    
+    @{ Name = "sx";  Value = "Set-ProfileProjectList"}
+
 ) | ForEach-Object {
     New-Alias -Name $_.Name -Value $_.Value
 }

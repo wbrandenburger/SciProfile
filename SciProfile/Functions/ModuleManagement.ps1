@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 function Import-PSMFunction {
 
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([PSCustomObject])]
 
@@ -23,7 +23,7 @@ function Import-PSMFunction {
 # ----------------------------------------------------------------------------
 function Import-PSMModule {
     
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([PSCustomObject])]
 
@@ -37,7 +37,7 @@ function Import-PSMModule {
         #     $Profile = "Admin"
         # }
 
-        $profiles = Get-Content $SciProfile.Import | ConvertFrom-Json
+        $profiles = Get-Content $SciProfile.ImportFile | ConvertFrom-Json
 
         Write-FormattedProcess -Message "Begin to import profile '$Profile'" -Module $SciProfile.Name
         $profiles | Select-Object -ExpandProperty $Profile | ForEach-Object {
@@ -57,17 +57,17 @@ function Import-PSMModule {
 # ----------------------------------------------------------------------------
 function Remove-PSMModule {
     
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([PSCustomObject])]
 
     Param(
-        [Parameter(Position=1, Mandatory=$True)]
+        [Parameter(Position=1, Mandatory)]
         [System.String] $Profile
     )
 
     Process {
-        $profiles = Get-Content $SciProfile.Import | ConvertFrom-Json
+        $profiles = Get-Content $SciProfile.ImportFile | ConvertFrom-Json
 
         $profiles | Select-Object -ExpandProperty $Profile  | ForEach-Object {
             Remove-Module -Name $_
@@ -86,7 +86,7 @@ function Remove-PSMModule {
 # ----------------------------------------------------------------------------
 function Import-PSMRepository {
 
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([PSCustomObject])]
 
@@ -122,7 +122,7 @@ function Import-PSMRepository {
 # ----------------------------------------------------------------------------
 function Install-PSMRepository {
 
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([PSCustomObject])]
 

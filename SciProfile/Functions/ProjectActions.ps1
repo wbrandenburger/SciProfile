@@ -2,14 +2,6 @@
 #   Open-Project.ps1 --------------------------------------------------------
 # ===========================================================================
 
-#   validation --------------------------------------------------------------
-# ---------------------------------------------------------------------------
-Class ValidateProjectAlias: System.Management.Automation.IValidateSetValuesGenerator {
-    [String[]] GetValidValues() {
-        return [String[]] ((Get-ProjectList -Unformatted | Select-Object -ExpandProperty "Alias") + "")
-    }
-}
-
 #   function ----------------------------------------------------------------
 # ---------------------------------------------------------------------------
 function Get-PropertyLocation {
@@ -26,13 +18,13 @@ function Get-PropertyLocation {
         ArrayList. List with location of specified property.
     #>
 
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([System.Collections.ArrayList])]
 
     Param (
         [ValidateSet([ValidateProjectAlias])]
-        [Parameter(Position=1, Mandatory=$True, HelpMessage="Name or alias of an project.")]
+        [Parameter(Position=1, Mandatory, HelpMessage="Name or alias of an project.")]
         [System.String] $Name,
 
         [Parameter(Position=2, HelpMessage="Property of project entry, which shall be returned.")]
@@ -76,13 +68,13 @@ function Get-ProjectLocation {
         ArrayList. List with location of specified property.
     #>
 
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([System.Collections.ArrayList])]
 
     Param (
         [ValidateSet([ValidateProjectAlias])]
-        [Parameter(Position=1, Mandatory=$True, HelpMessage="Name or alias of an project.")]
+        [Parameter(Position=1, Mandatory, HelpMessage="Name or alias of an project.")]
         [System.String] $Name
     )
 
@@ -107,7 +99,7 @@ function Get-WebLocation {
         ArrayList. List with location of specified property.
     #>    
 
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([PSCustomObject])]
 
@@ -129,7 +121,7 @@ function Get-WebLocation {
 # ---------------------------------------------------------------------------
 function Get-ProjectChildItem {
     
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([PSCustomObject])]
 
@@ -156,7 +148,7 @@ function Get-ProjectChildItem {
 # ---------------------------------------------------------------------------
 function Set-ProjectLocation {
     
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([PSCustomObject])]
 
@@ -183,7 +175,7 @@ function Set-ProjectLocation {
 # ---------------------------------------------------------------------------
 function Open-ProjectWorkspace {
     
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([PSCustomObject])]
 
@@ -215,7 +207,7 @@ function Open-ProjectWorkspace {
 # ---------------------------------------------------------------------------
 function Open-ProjectFileExplorer {
     
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([PSCustomObject])]
 
@@ -241,7 +233,7 @@ function Open-ProjectFileExplorer {
 # ---------------------------------------------------------------------------
 function Open-ProjectBrowser {
     
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([PSCustomObject])]
 

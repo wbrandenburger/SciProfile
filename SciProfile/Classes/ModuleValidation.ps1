@@ -21,3 +21,11 @@ Class ValidatePSModuleProject: IValidateSetValuesGenerator {
         return [String[]] (ValidateSciProfileProjectType -Type "PSModule")
     }
 }
+
+#   validation ---------------------------------------------------------------
+# ----------------------------------------------------------------------------
+Class ValidateProjectAlias: System.Management.Automation.IValidateSetValuesGenerator {
+    [String[]] GetValidValues() {
+        return [String[]] ((ValidateSciProfileProjectType) + "")
+    }
+}

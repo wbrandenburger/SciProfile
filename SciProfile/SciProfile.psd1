@@ -13,7 +13,7 @@
 RootModule = "SciProfile.psm1"
 
 # Version number of this module.
-ModuleVersion = "0.3.0"
+ModuleVersion = "0.3.1"
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -94,6 +94,7 @@ FunctionsToExport = @(
     "ActivateSciProfileAutocompletion",
     "Get-ProjectList",
     "New-ConfigurationFile",
+    "Set-ProfileProjectList",
     "Get-ProjectLocation",
     "Get-WebLocation",
     "Get-ProjectChildItem",
@@ -106,7 +107,7 @@ FunctionsToExport = @(
     "Import-PSMModule",
     "Remove-PSMModule",
     "Import-PSMRepository",
-    "Install-PSMRepository"
+    "Install-PSMRepository",
     "ValidateSciProfileProjectType"
 )
 
@@ -125,7 +126,8 @@ AliasesToExport = @(
     "webx",
     "fox",
     "lsx",
-    "vsx"
+    "vsx",
+    "sx"
 )
 
 # DSC resources to export from this module

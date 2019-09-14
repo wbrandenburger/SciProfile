@@ -2,14 +2,6 @@
 #   Get-Projects.ps1 --------------------------------------------------------
 # ===========================================================================
 
-#   validation --------------------------------------------------------------
-# ---------------------------------------------------------------------------
-Class ValidateProjectAlias: System.Management.Automation.IValidateSetValuesGenerator {
-    [String[]] GetValidValues() {
-        return [String[]] ((Get-ProjectList -Unformatted | Select-Object -ExpandProperty "Alias") + "")
-    }
-}
-
 #   function ----------------------------------------------------------------
 # ---------------------------------------------------------------------------
 function Get-ConfigurationFile {
@@ -24,19 +16,22 @@ function Get-ConfigurationFile {
         System.String. Path of project configuration file.
     #>
 
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([Void])]
 
     Param (
         [Parameter(Position=1, HelpMessage="Existing project type.")]
-        [System.String] $Type="Project"
+        [System.String] $Type="project"
     )
 
     Process {
 
-        return Join-Path -Path $SciProfile.ProjectDir -ChildPath "$($Type.ToLower()).json"
-
+        if ($Type -eq "project") {
+            return $SciProfile.ProjectFile 
+        } else {
+            return Join-Path -Path $SciProfile.ConfigDir -ChildPath "project-$($Type).json"
+        }
     }
 }
 
@@ -52,30 +47,74 @@ function New-ConfigurationFile {
         System.String. Path of project configuration file.
     #>
 
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([PSCustomObject])]
 
     Param ()
 
     Process {
-        $project_name = "Project"
-
-        $project_file = Get-ConfigurationFile -Type $project_name
+        $project_file = Get-ConfigurationFile
         if (Test-Path -Path $project_file) {
             Remove-Item -Path $project_file -Force
         }
 
         $project_list = @()
-        Get-ChildItem -Path $SciProfile.ProjectDir -Filter "*.json" | ForEach-Object{
-            $fileData = Get-Content $_ | ConvertFrom-Json
-            $project_list += $fileData | Select-Object -Property $SciProfile.Format
+        if ($SciProfile.ProjectAlias){       
+            $SciProfile.ProjectAlias -split " "  | ForEach-Object {
+                $project_content = Get-Content -Path $(Get-ConfigurationFile -Type $_) | ConvertFrom-Json 
+                $project_list += $project_content | Select-Object -Property $SciProfile.Format
+            }
         }
 
         $project_json = $(ConvertTo-Json $project_list)
         Out-File -FilePath $project_file -InputObject $project_json
+    }
+}
 
-        return $project_file
+#   function ----------------------------------------------------------------
+# ---------------------------------------------------------------------------
+function Set-ProfileProjectList {
+    
+    [CmdletBinding(PositionalBinding)]
+    
+    [OutputType([Void])]
+
+    Param ()
+
+    Process{
+
+        Set-PocsLibrary -Name $SciProfile.ConfigLib -VirtualEnv $SciProfile.VirtualEnv
+
+
+        if ($SciProfile.ProjectAlias){
+            $project_list = $SciProfile.ProjectAlias -split " "
+            
+            $project_list | ForEach-Object {
+                $project_file = Get-ConfigurationFile -Type $_
+
+                If (Test-Path -Path $project_file){
+                    Remove-Item -Path $project_file -Force
+                }
+
+                Start-Process -Path "papis" -Args "export", "--format", "json", "--out", $project_file, "type:$_", "--all" -WindowStyle "Hidden"
+            }
+
+            do {
+                $wait = $False
+                $project_list | ForEach-Object {
+                    if (-not (Test-Path -Path $(Get-ConfigurationFile -Type $_))) {
+                        $wait = $True
+                    }
+                }
+                Start-Sleep -Seconds 0.5
+            } while ($wait)
+        }
+
+        Restore-PocsLibrary
+        Restore-VirtualEnv
+
+        New-ConfigurationFile
     }
 }
 
@@ -101,7 +140,7 @@ function Get-ProjectList {
 
     Param (
         [Parameter(Position=1, HelpMessage="Existing project type.")]
-        [System.String] $Type="Project",
+        [System.String] $Type="project",
 
         [Parameter(HelpMessage="Does not return information as readable table.")]
         [Switch] $Unformatted
@@ -109,7 +148,7 @@ function Get-ProjectList {
 
     Process {
         $project_file = Get-ConfigurationFile -Type $Type
-        if ($Type -eq "Project" -and -not $(Test-Path -Path $project_file)) {
+        if ($Type -eq "project" -and -not $(Test-Path -Path $project_file)) {
             New-ConfigurationFile
         }
 
@@ -138,13 +177,13 @@ function Format-Project {
         Format. All project entries as formatted table.
     #>
 
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([PSCustomObject])]
 
     Param (
         [Parameter(Position=1, HelpMessage="Existing project type.")]
-        [System.String] $Type="Project",
+        [System.String] $Type="project",
 
         [Parameter(Position=2, HelpMessage="Project list with all entries of specified project type")]
         [PSCustomObject] $Projects
@@ -173,7 +212,7 @@ function Test-Project {
         PSCustomObject. Project which contains the specified identifier.
     #>
 
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
 
     [OutputType([PSCustomObject])]
 
@@ -209,7 +248,7 @@ function Get-ProjectType {
         System.String. Project type of specified identifier
     #>
 
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([PSCustomObject])]
 
@@ -249,7 +288,7 @@ function Select-Project {
         PSCustomObject. All project entries as formatted table.
     #>
 
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([PSCustomObject])]
 
@@ -261,7 +300,7 @@ function Select-Project {
         [System.String] $Property,
 
         [Parameter(Position=1, HelpMessage="Existing project type.")]
-        [System.String] $Type="Project"
+        [System.String] $Type="project"
     )
 
     Process{ 

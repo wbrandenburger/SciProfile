@@ -24,14 +24,6 @@
         "Folder" : true
     },
     {
-        "Id" : "ProjectDir", 
-        "Field" : "project-dir", 
-        "Section" : "user", 
-        "Default" : "%(WorkDir)s\\project",
-        "Required" : true,
-        "Folder" : true
-    },
-    {
         "Id" : "LocalDir", 
         "Field" : "local-dir", 
         "Section" : "user", 
@@ -40,10 +32,34 @@
         "Folder" : true
     },
     {
-        "Id" : "Import",
-        "Field" : "import-module", 
+        "Id" : "ProjectFile",
+        "Field" : "project-file", 
+        "Section" : "user", 
+        "Default" : "%(WorkDir)s\\config\\project.json"
+    },
+    {
+        "Id" : "ProjectAlias",
+        "Field" : "project-alias", 
+        "Section" : "user", 
+        "Default" : ""
+    },
+    {
+        "Id" : "ImportFile",
+        "Field" : "import-file", 
         "Section" : "user", 
         "Default" : "%(WorkDir)s\\config\\import.json"
+    },
+    {
+        "Id" : "ConfigLib",
+        "Field" : "config-lib", 
+        "Section" : "pocs", 
+        "Default" : ""
+    },
+    {
+        "Id" : "VirtualEnv",
+        "Field" : "virtual-env", 
+        "Section" : "pocs", 
+        "Default" : ""
     },
     {
         "Id" : "ModuleDir",

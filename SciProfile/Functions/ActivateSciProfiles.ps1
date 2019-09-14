@@ -44,18 +44,23 @@ function ValidateSciProfileProjectType {
         System.String[]. Virtual environments
     #>
 
-    [CmdletBinding(PositionalBinding=$True)]
+    [CmdletBinding(PositionalBinding)]
     
     [OutputType([System.String[]])]
 
     Param(
         [Parameter(Position=1, HelpMessage="Existing project type.")]
-        [System.String] $Type="Project"
+        [System.String] $Type
     )
 
     Process{
 
-       return (Get-ProjectList -Unformatted | Where-Object { $_.Type -eq $Type } | Select-Object -ExpandProperty "Alias")
+        $project_list = Get-ProjectList -Unformatted
+        if ($Type) {
+            $project_list | Where-Object { $_.Type -eq $Type }
+        }
+
+        return $project_list | Select-Object -ExpandProperty "Alias"
     
     }
 }
