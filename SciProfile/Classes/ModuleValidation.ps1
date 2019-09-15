@@ -37,3 +37,11 @@ Class ValidateSystemEnv: System.Management.Automation.IValidateSetValuesGenerato
         return [String[]] ((Get-ChildItem -Path "Env:" | Select-Object -ExpandProperty "Name") + "")
     }
 }
+
+#   validation ---------------------------------------------------------------
+# ----------------------------------------------------------------------------
+Class ValidateSciProfileConfigFiles: System.Management.Automation.IValidateSetValuesGenerator {
+    [String[]] GetValidValues() {
+        return [String[]] (ValidateSciProfileConfigFiles)
+    }
+}

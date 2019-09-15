@@ -38,10 +38,12 @@ function ValidateSciProfileProjectType {
 
     <#
     .DESCRIPTION
-        Return values for the use of validating existing
+        Return values for the use of validating existing projects.
     
+    .PARAMETER Type
+
     .OUTPUTS
-        System.String[]. Virtual environments
+        System.String[]. Existing projects.
     #>
 
     [CmdletBinding(PositionalBinding)]
@@ -61,6 +63,37 @@ function ValidateSciProfileProjectType {
         }
 
         return $project_list | Select-Object -ExpandProperty "Alias"
+    
+    }
+}
+
+#   function ----------------------------------------------------------------
+# ---------------------------------------------------------------------------
+function ValidateSciProfileConfigFiles {
+
+    <#
+    .DESCRIPTION
+        Return values for the use of validating existing module configuration files.
+    
+    .OUTPUTS
+        System.String[]. Existing module configuration files.
+    #>
+
+    [CmdletBinding(PositionalBinding)]
+    
+    [OutputType([System.String[]])]
+
+    Param()
+
+    Process{
+        
+        $config_file_list = $SciProfile.ConfigFileList | ForEach-Object {
+            [PSCustomObject] @{
+                Name = [System.IO.Path]::GetFileName($_)
+            }
+        }
+        
+        return $config_file_list | Select-Object -ExpandProperty Name
     
     }
 }

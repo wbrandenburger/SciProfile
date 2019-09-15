@@ -61,6 +61,8 @@ An module specific extension of `PSIni` enables the exploitation of a reference 
 
 | Command                  | Alias         | Description                                                                                 |
 |--------------------------|---------------|---------------------------------------------------------------------------------------------|
+| `Get-VirtualEnvConfig`   |               | Get the content of current module config file.                                              |
+| `Edit-VirtualEnvConfig`  |               | Edit the content of current module config file.                                             |
 
 ## Examples
 

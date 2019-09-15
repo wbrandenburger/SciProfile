@@ -50,6 +50,18 @@
         "Default" : "%(WorkDir)s\\config\\import.json"
     },
     {
+        "Id" : "Editor",
+        "Field" : "default-editor",
+        "Section" : "user", 
+        "Default" : "notepad"
+    },
+    {
+        "Id" : "EditorArgs",
+        "Field" : "editor-arguments", 
+        "Section" : "user", 
+        "Default" : ""
+    },
+    {
         "Id" : "ConfigLib",
         "Field" : "config-lib", 
         "Section" : "pocs", 
