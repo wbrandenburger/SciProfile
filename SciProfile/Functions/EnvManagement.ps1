@@ -165,7 +165,7 @@ function Test-EnvPath {
     )
 
     Process {
-        return $(if (Get-EnvironmentVariable -Name "Path" -Scope $Scope | Where-Object -FilterScript { $_.Name -match $($Path -replace "\\", "\\")}) {$True} else {$False})
+        return $(if (Get-EnvVariable -Name "Path" -Scope $Scope | Where-Object -FilterScript { $_.Name -match $($Path -replace "\\", "\\")}) {$True} else {$False})
     }
 }
 
