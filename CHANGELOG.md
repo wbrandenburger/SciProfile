@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.3.3](https://github.com/wbrandenburger/SCiProfile/tree/0.3.3) (2019-09-15)
+
+- Added fields `default-editor` and `editor-arguments` in section `user` for opening configuration files in defined editor.
+- Added function `Edit-SciProfileConfig`.
+- All configuration files can be opened by `Edit-SciProfileConfig` using autocompletion.
+
 ## [0.3.2](https://github.com/wbrandenburger/SCiProfile/tree/0.3.2) (2019-09-15)
 
 **Implemented enhancements:**
@@ -7,9 +13,6 @@
 - Added function `Get-EnvVariable` with alias `ls-env`.
 - Added function `Set-EnvVariable` with alias `s-env`.
 - Added function `Test-EnvPath` with alias `t-env`.
-- Added fields `default-editor` and `editor-arguments` in section `user` for opening configuration files in defined editor.
-- Added function `Edit-SciProfileConfig`.
-- All configuration files can be opened by `Edit-SciProfileConfig` using autocompletion.
 
 ## [0.3.1](https://github.com/wbrandenburger/SCiProfile/tree/0.3.1) (2019-09-15)
 
