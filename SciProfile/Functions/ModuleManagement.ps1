@@ -114,6 +114,7 @@ function Import-PSMRepository {
         }      
         else { 
             Write-FormattedError -Message "Path of module $($module) is not valid." -Module $SciProfile.Name
+            return 1
         }
     }
 }
@@ -134,9 +135,9 @@ function Install-PSMRepository {
 
     Process {
         
-        Import-PSMRepository -Name $Name
-
-        Start-Process -FilePath "pwsh" -Wait -NoNewWindow
+        if (-not $(Import-PSMRepository -Name $Name)){
+            Start-Process -FilePath "pwsh" -Wait -NoNewWindow
+        }
     }
 }
 
