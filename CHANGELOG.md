@@ -6,6 +6,7 @@
 
 - Added function `Set-ProfileProjectList`
 - Added fields `config-lib` and `virtual-env` in section `pocs` for the creation of project lists for the purpose of autocompletion
+- Referenced fields in configuration files with a reference to another fields can be evaluated
 
 ## [0.3.0](https://github.com/wbrandenburger/SCiProfile/tree/0.3.0) (2019-09-12)
 
