@@ -29,3 +29,11 @@ Class ValidateProjectAlias: System.Management.Automation.IValidateSetValuesGener
         return [String[]] ((ValidateSciProfileProjectType) + "")
     }
 }
+
+#   validation ---------------------------------------------------------------
+# ----------------------------------------------------------------------------
+Class ValidateSystemEnv: System.Management.Automation.IValidateSetValuesGenerator {
+    [String[]] GetValidValues() {
+        return [String[]] ((Get-ChildItem -Path "Env:" | Select-Object -ExpandProperty "Name") + "")
+    }
+}

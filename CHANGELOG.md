@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.3.2](https://github.com/wbrandenburger/SCiProfile/tree/0.3.2) (2019-09-15)
+
+**Implemented enhancements:**
+
+- Added function `Get-EnvironmentVariable` with alias `ls-env`
+- Added function `Set-EnvironmentVariable` with alias `s-env`
+- Added function `Test-EnvironmentPath` with alias `t-env`
+
 ## [0.3.1](https://github.com/wbrandenburger/SCiProfile/tree/0.3.1) (2019-09-15)
 
 **Implemented enhancements:**

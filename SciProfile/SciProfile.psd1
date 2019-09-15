@@ -109,6 +109,9 @@ FunctionsToExport = @(
     "Remove-PSMModule",
     "Import-PSMRepository",
     "Install-PSMRepository",
+    "Get-EnvVariable",
+    "Set-EnvVariable",
+    "Test-EnvPath",
     "ValidateSciProfileProjectType"
 )
 
@@ -124,11 +127,14 @@ AliasesToExport = @(
     "cdx",
     "exx",
     "dirx",
-    "webx",
     "fox",
     "lsx",
+    "ls-env"
+    "sx",
+    "t-env",
+    "s-env",
     "vsx",
-    "sx"
+    "webx"
 )
 
 # DSC resources to export from this module
