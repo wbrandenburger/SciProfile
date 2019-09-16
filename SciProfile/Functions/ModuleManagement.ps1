@@ -35,7 +35,7 @@ function Import-PSMModule {
     Process {
 
         if (-not $(Test-Path -Path $SciProfile.ImportFile)){
-            Write-FormattedWarning -Message "File $($SciProfile.ImportFile) does not exist. Import of $Profile aborted." -Module $SciProfile.Name
+            Write-FormattedWarning -Message "File $($SciProfile.ImportFile) does not exist. Import of profile $Profile is aborted." -Module $SciProfile.Name
             return
         }
 
@@ -88,7 +88,7 @@ function Remove-PSMModule {
     Process {
 
         if (-not $(Test-Path -Path $SciProfile.ImportFile)){
-            Write-FormattedWarning -Message "File $($SciProfile.ImportFile) does not exist. Import of $Profile aborted." -Module $SciProfile.Name
+            Write-FormattedWarning -Message "File $($SciProfile.ImportFile) does not exist. Import of profile $Profile aborted." -Module $SciProfile.Name
             return
         }
 
