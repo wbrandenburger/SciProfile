@@ -25,7 +25,7 @@ function Import-PSMModule {
     
     [CmdletBinding(PositionalBinding)]
     
-    [OutputType([PSCustomObject])]
+    [OutputType([Void])]
 
     Param(
         [Parameter(Position=1)]
@@ -33,23 +33,42 @@ function Import-PSMModule {
     )
 
     Process {
-        # if ((New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)){
-        #     $Profile = "Admin"
-        # }
+
+        if (-not $(Test-Path -Path $SciProfile.ImportFile)){
+            Write-FormattedError -Message "File $($SciProfile.ImportFile) does not exist. Operation aborted." -Module $SciProfile.Name
+            return
+        }
 
         $profiles = Get-Content $SciProfile.ImportFile | ConvertFrom-Json
+        $available_module = Get-Module -ListAvailable
 
-        Write-FormattedProcess -Message "Begin to import profile '$Profile'" -Module $SciProfile.Name
-        $profiles | Select-Object -ExpandProperty $Profile | ForEach-Object {
-            Write-FormattedMessage -Type "Import" -Message $_ -Color Cyan -Module $SciProfile.Name
+        if ($profiles.($Profile)) {
+            Write-FormattedProcess -Message "Begin to import profile '$Profile'" -Module $SciProfile.Name
 
-            Import-Module -Name $_ -Scope "Global"
+            $profiles | Select-Object -ExpandProperty $Profile | ForEach-Object {
+                $module_name = $_
+                if ($available_module | Where-Object {$_.Name -eq $module_name}){
+                    Write-FormattedMessage -Type "Import" -Message $module_name -Color Cyan -Module $SciProfile.Name
+
+                    Import-Module -Name $module_name -Scope "Global"
+                } else {
+                    Write-FormattedWarning -Message "Module $module_name does not exist. No Import of specified module." -Module $SciProfile.Name
+                }
+            }
+        } else {
+            Write-FormattedWarning -Message "Profile $Profile does not exist. No Import of specified profile." -Module $SciProfile.Name 
+            return
         }
+
+        if ($($Profile -ne "Admin") -and $(Test-Administrator)){
+            return $(Import-PSMModule -Profile "Admin")
+        }
+
+        Write-FormattedSuccess -Message "Finished importing profile '$Profile'." -Module $SciProfile.Name
 
         if ($VerbosePreference){
             return Get-Module
         }
-        return 
     }
 }
 
@@ -67,18 +86,32 @@ function Remove-PSMModule {
     )
 
     Process {
-        $profiles = Get-Content $SciProfile.ImportFile | ConvertFrom-Json
 
-        $profiles | Select-Object -ExpandProperty $Profile  | ForEach-Object {
-            Remove-Module -Name $_
+        if (-not $(Test-Path -Path $SciProfile.ImportFile)){
+            Write-FormattedError -Message "File $($SciProfile.ImportFile) does not exist. Operation aborted." -Module $SciProfile.Name
+            return
         }
 
-        Write-FormattedSuccess -Message "Finished removing profile '$Profile'." -Space -Module $SciProfile.Name
-        
+        $profiles = Get-Content $SciProfile.ImportFile | ConvertFrom-Json
+        $loaded_module = Get-Module
+
+        if ($profiles.($Profile)) {
+            Write-FormattedProcess -Message "Begin to remove profile '$Profile'" -Module $SciProfile.Name
+            $profiles | Select-Object -ExpandProperty $Profile  | ForEach-Object {
+                $module_name = $_
+                if ($loaded_module | Where-Object {$_.Name -eq $module_name}){
+                    Remove-Module -Name $module_name
+                }
+            }
+            Write-FormattedSuccess -Message "Finished removing profile '$Profile'." -Module $SciProfile.Name
+        } else {
+            Write-FormattedWarning -Message "Profile $Profile does not exist. No Import of specified profile." -Module $SciProfile.Name
+            return
+        }
+
         if ($VerbosePreference){
             return Get-Module
         }
-        return 
     }
 }
 

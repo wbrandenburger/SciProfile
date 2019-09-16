@@ -16,6 +16,14 @@ Class ValidatePapisProject: IValidateSetValuesGenerator {
 
 #   validation ---------------------------------------------------------------
 # ----------------------------------------------------------------------------
+Class ValidateRepositoryProject: IValidateSetValuesGenerator {
+    [String[]] GetValidValues() {
+        return [String[]] (ValidateSciProfileProjectType -Type "Repository")
+    }
+}
+
+#   validation ---------------------------------------------------------------
+# ----------------------------------------------------------------------------
 Class ValidatePSModuleProject: IValidateSetValuesGenerator {
     [String[]] GetValidValues() {
         return [String[]] (ValidateSciProfileProjectType -Type "PSModule")

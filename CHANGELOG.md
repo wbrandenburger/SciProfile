@@ -1,5 +1,10 @@
 # Change Log
 
+## [0.3.4](https://github.com/wbrandenburger/SCiProfile/tree/0.3.4) (2019-09-16)
+
+- Added function `Test-Administrator`.
+- Added profile `Admin` to function `Import-PSMModule` and `Remove-PSMModule`
+
 ## [0.3.3](https://github.com/wbrandenburger/SCiProfile/tree/0.3.3) (2019-09-15)
 
 - Added fields `default-editor` and `editor-arguments` in section `user` for opening configuration files in defined editor.
