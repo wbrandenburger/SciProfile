@@ -57,11 +57,6 @@ RequiredModules = @(
         ModuleName = "PSIni"; 
         ModuleVersion = "3.1.2"; 
     }
-    # @{
-    #     ModuleName = "PSModuleUtils"; 
-    #     ModuleVersion = "1.0.0"; 
-    #     GUID = "08a1d5c7-0d9c-4cd2-b8e0-90ee1318a1a7";
-    # }
     @{
         ModuleName = "PSVirtualEnv";
         ModuleVersion = "0.5.0";
