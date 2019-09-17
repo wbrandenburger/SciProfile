@@ -68,6 +68,4 @@ Format-JsonContent -Content $config_format -Substitution $SciProfile | ForEach-O
     }
 }
 
-Write-FormattedMessage -Message "Module config file: $($Module.Config)" -Module $SciProfile.Name -Color DarkYellow
-
-Write-FormattedMessage -Message "Working directory: $($SciProfile.WorkDir)" -Module $SciProfile.Name -Color DarkYellow
+Write-FormattedMessage -Message "Module config file: $($Module.Config)" -Module $SciProfile.Name -Color "White"
