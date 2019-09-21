@@ -13,7 +13,7 @@
 RootModule = "SciProfile.psm1"
 
 # Version number of this module.
-ModuleVersion = "0.3.7"
+ModuleVersion = "0.3.8"
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -86,6 +86,7 @@ NestedModules = @("PSModuleUtils\PSModuleUtils.psm1")
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
+    "Attempt"
     "ActivateSciProfileAutocompletion",
     "Get-ProjectList",
     "New-ConfigurationFile",

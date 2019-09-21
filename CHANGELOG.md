@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.3.8(https://github.com/wbrandenburger/SCiProfile/tree/0.3.8) (2019-09-21)
+
+- Added importing of several repositories defined in configuration file `import.json` via functions of module management.
+
 ## [0.3.4](https://github.com/wbrandenburger/SCiProfile/tree/0.3.4) (2019-09-16)
 
 - Added function `Test-Administrator`.

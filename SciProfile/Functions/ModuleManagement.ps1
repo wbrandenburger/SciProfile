@@ -39,7 +39,7 @@ function Import-PSMModule {
             return
         }
 
-        $profiles = Get-Content $SciProfile.ImportFile | ConvertFrom-Json
+        $profiles = Get-Content -Path $SciProfile.ImportFile | ConvertFrom-Json
         $available_module = Get-Module -ListAvailable
 
         if ($profiles.($Profile)) {
@@ -92,7 +92,7 @@ function Remove-PSMModule {
             return
         }
 
-        $profiles = Get-Content $SciProfile.ImportFile | ConvertFrom-Json
+        $profiles = Get-Content -Path $SciProfile.ImportFile | ConvertFrom-Json
         $loaded_module = Get-Module
 
         if ($profiles.($Profile)) {
@@ -115,6 +115,7 @@ function Remove-PSMModule {
     }
 }
 
+
 #   function -----------------------------------------------------------------
 # ----------------------------------------------------------------------------
 function Import-PSMRepository {
@@ -124,13 +125,26 @@ function Import-PSMRepository {
     [OutputType([PSCustomObject])]
 
     Param(
+
         [ValidateSet([ValidatePSModuleProject])]
-        [Parameter(Position=1, HelpMessage="Name or alias of an project.")]
-        [System.String] $Name
+        [Parameter(Position=1, HelpMessage="Specification of project.")]
+        [System.String] $Name="",
+
+        [Parameter(HelpMessage="Modules are gotten from configuration file.")]
+        [Switch] $Config
     )
 
     Process {
 
+        if ($Config) {
+            Get-Content -Path $SciProfile.ImportFile | ConvertFrom-Json | Select-Object -ExpandProperty "repository" | ForEach-Object {
+                if ($_) {
+                    Import-PSMRepository -Name $_
+                }
+            }
+            return
+        }
+        
         $module = Select-Project -Name $Name -Property "Name" -Type "PSModule"
         $module_path = Select-Project -Name $Name -Property "Local" -Type "PSModule"
         
@@ -163,14 +177,21 @@ function Install-PSMRepository {
     Param(
         [ValidateSet([ValidatePSModuleProject])]
         [Parameter(Position=1, HelpMessage="Name or alias of an project.")]
-        [System.String] $Name
+        [System.String] $Name,
+
+        [Parameter(HelpMessage="Modules are gotten from configuration file.")]
+        [Switch] $Config
     )
 
     Process {
         
-        if (-not $(Import-PSMRepository -Name $Name)){
-            Start-Process -FilePath "pwsh" -Wait -NoNewWindow
+        if ($Config){
+            Import-PSMRepository -Config
+        } else {
+            Import-PSMRepository -Name $Name
         }
+        
+        Start-Process -FilePath "pwsh" -Wait -NoNewWindow
     }
 }
 
