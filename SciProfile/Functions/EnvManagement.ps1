@@ -265,77 +265,65 @@ function Remove-EnvPath {
 
     Process {
 
-        $value = ([System.Environment]::GetEnvironmentVariable("Path", $Scope) -Split ';' | Where-Object { $_ -ne $Path }) -Join ";"
+        $value = ([System.Environment]::GetEnvironmentVariable("PATH", $Scope) -Split ';' | Where-Object { $_ -ne $Path }) -Join ";"
 
         Set-EnvVariable -Name "PATH" -Value $value -Scope $Scope
     } 
 }
 
-# #   function -------------------------------------------------------------------
-# # ------------------------------------------------------------------------------
-# function Repair-EnvironmentPath
-# {
-#     <#
-#     .SYNOPSIS
+#   function ----------------------------------------------------------------
+# ---------------------------------------------------------------------------
+function Repair-EnvPath {
+    <#
+    .DESCRIPTION
+        Add a path to environment variable 'PATH'.
 
-#     .DESCRIPTION
+    .PARAMETER Name
 
-#     .PARAMETER Name
+    .PARAMETER Value
 
-#     .PARAMETER Scope
+    .PARAMETER Scope
 
-#     .EXAMPLE
+    .EXAMPLE
+        PS C:\> Set-EnvPath -Path 'C:\ProgramData' -Scope 'process'
 
-#     .NOTES
-#     #>
+        -----------
+        Description
+        Add to environment variable 'PATH' the path 'C:\ProgramData' in scope 'process'.
 
-#     [CmdletBinding(PositionalBinding=$True, SupportsShouldProcess=$True, ConfirmImpact="None")]
-
-#     [OutputType([Void])]
+    .OUTPUTS
+        None.
+    #>  
     
-#     Param (
-#         [Parameter()]
-#         [ValidateSet("process", "machine", "user")]
-#         [System.String] $Scope = "process"
-#     )
+    [CmdletBinding(PositionalBinding)]
 
-#     Process {
+    [OutputType([Boolean])]
 
-#         if ($Scope -eq 'process')
-#         {
-#             Write-Warning -Message 'This will change current-process value only. This may not be what you intended; see -Scope'
-#         }
+    Param(
+        [Parameter(Position=0, HelpMessage="Scope of specified environment variable")]
+        [ValidateSet("process", "machine", "user")]
+        [System.String] $Scope = "process"
+    )
 
-#         # Ensure unique paths only
-#         $paths = Get-EnvironmentVariable -Name "Path" -Scope $Scope
-#         $result = @()
-#         foreach ($path in ($paths | Select-Object -ExpandProperty Path))
-#         {
-#             if ([string]::IsNullOrWhiteSpace($path)) {
-#             Write-Verbose -Message 'Found empty path. Removing.'
-#             continue
-#             }
+    Process {
 
-#             $path = $path.Trim()
-#             if ($path -in $result) {
-#                 Write-Warning -Message "Found duplicate path [$path]. Removing."
-#                 if ($PSCmdlet.ShouldProcess($path, 'Removing duplicate path entry?')) {
-#                     continue
-#                 }
-#             }   
+        if ($Scope -eq 'process')
+        {
+            Write-FormattedWarning -Message 'This will change current-process value only. This may not be what you intended; see -Scope' -Module $SciProfile.Name
+        }
 
-#             if (-not (Test-Path $path -PathType Container)) {
-#                 Write-Warning -Message "Found invalid path [$path]. Removing."
-#                 if ($PSCmdlet.ShouldProcess($path, 'Removing invalid path entry?')) {
-#                     continue
-#                 }
-#             }
+        $path_list = [System.Environment]::GetEnvironmentVariable("PATH", $Scope) -Split ';' | Sort-Object | Get-Unique
 
-#             $result += $path
-#         }
+        $value=@()
+        $value = ($path_list | ForEach-Object {
+            if (Test-Path -Path $_ -ErrorAction SilentlyContinue ){
+                $result + $_
+            }
+        }) -Join ";"
 
-#         if ($PSCmdlet.ShouldProcess("`n$($result -join "`n")`n", 'Update environment with paths')){
-#             [Environment]::SetEnvironmentVariable("Path", $result -join ';', $Scope)
-#         }
-#     }
-# }
+        if ($Scope -ne 'process')
+        {
+            Set-EnvVariable -Name "PATH" -Value $value -Scope $Scope
+        }
+    } 
+}

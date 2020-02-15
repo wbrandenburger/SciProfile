@@ -109,6 +109,7 @@ FunctionsToExport = @(
     "Set-EnvVariable",
     "Test-EnvPath",
     "Set-EnvPath",
+    "Repair-EnvPath",
     "Remove-EnvPath",
     "Test-Administrator",
     "Get-SciProfileConfig",
