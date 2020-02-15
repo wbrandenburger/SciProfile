@@ -265,7 +265,7 @@ function Remove-EnvPath {
 
     Process {
 
-        $value = [System.Environment]::GetEnvironmentVariable("Path", $Scope) -Split ';' | Where-Object { $_ -ne $Path } -Join ";"
+        $value = ([System.Environment]::GetEnvironmentVariable("Path", $Scope) -Split ';' | Where-Object { $_ -ne $Path }) -Join ";"
 
         Set-EnvVariable -Name "PATH" -Value $value -Scope $Scope
     } 

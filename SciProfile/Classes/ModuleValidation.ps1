@@ -50,7 +50,7 @@ Class ValidateSystemEnv: System.Management.Automation.IValidateSetValuesGenerato
 # ----------------------------------------------------------------------------
 Class ValidateSystemEnvPath: System.Management.Automation.IValidateSetValuesGenerator {
     [String[]] GetValidValues() {
-        return [String[]] (Get-EnvironmentVariable -Name "PATH" | Select-Object -ExpandProperty Name)
+        return [String[]] ([System.Environment]::GetEnvironmentVariable("Path", "process") -Split ';')
     }
 }
 
