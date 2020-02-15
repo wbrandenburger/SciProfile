@@ -1,6 +1,12 @@
 # Change Log
 
-## [0.3.8(https://github.com/wbrandenburger/SCiProfile/tree/0.3.8) (2019-09-21)
+## [0.3.9](https://github.com/wbrandenburger/SCiProfile/tree/0.3.9) (2020-01-14)
+
+**Implemented enhancements:**
+
+- Concatenation in `Set-EnvVariable`
+
+## [0.3.8](https://github.com/wbrandenburger/SCiProfile/tree/0.3.8) (2019-09-21)
 
 - Added importing of several repositories defined in configuration file `import.json` via functions of module management.
 

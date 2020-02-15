@@ -114,15 +114,22 @@ function Set-EnvVariable
         [Parameter(Position=1, Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName , HelpMessage="Name of environment variable")]
         [System.String] $Name,
 
-        [Parameter(Position=2, Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName , HelpMessage="Value ofor specified environment variable")]
+        [Parameter(Position=2, Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName , HelpMessage="Value for specified environment variable")]
         [System.String] $Value,
 
         [Parameter(Position=3, HelpMessage="Scope of specified environment variable")]
         [ValidateSet("process", "machine", "user")]
-        [System.String] $Scope = "process"
+        [System.String] $Scope = "process",
+
+        [Parameter(HelpMessage="Concatenates the specified environment variable")]
+        [Switch] $Concatenate
     )
   
     Process {
+
+        if ($Concatenate) {
+            $Value = $Value + ";" + [System.Environment]::GetEnvironmentVariable($Name, $Scope)
+        } 
 
         [System.Environment]::SetEnvironmentVariable($Name, $Value, $Scope)
 
@@ -141,7 +148,7 @@ function Test-EnvPath {
     .PARAMETER Scope
 
     .EXAMPLE
-        PS C:\> Test-EnvPath -Path 'C:\Windows' -SCope 'process'
+        PS C:\> Test-EnvPath -Path 'C:\Windows' -Scope 'process'
         True
 
         -----------
@@ -167,6 +174,101 @@ function Test-EnvPath {
     Process {
         return $(if (Get-EnvVariable -Name "Path" -Scope $Scope | Where-Object -FilterScript { $_.Name -match $($Path -replace "\\", "\\")}) {$True} else {$False})
     }
+}
+
+#   function ----------------------------------------------------------------
+# ---------------------------------------------------------------------------
+function Set-EnvPath {
+    <#
+    .DESCRIPTION
+        Add a path to environment variable 'PATH'.
+
+    .PARAMETER Name
+
+    .PARAMETER Value
+
+    .PARAMETER Scope
+
+    .EXAMPLE
+        PS C:\> Set-EnvPath -Path 'C:\ProgramData' -Scope 'process'
+
+        -----------
+        Description
+        Add to environment variable 'PATH' the path 'C:\ProgramData' in scope 'process'.
+
+    .OUTPUTS
+        None.
+    #>  
+    
+    [CmdletBinding(PositionalBinding)]
+
+    [OutputType([Boolean])]
+
+    Param(
+        [Parameter(Position=0, Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName , HelpMessage="Path which shall be added to environment variable 'PATH'")]
+        [System.String] $Path,
+
+        [Parameter(Position=1, HelpMessage="Scope of specified environment variable")]
+        [ValidateSet("process", "machine", "user")]
+        [System.String] $Scope = "process"
+    )
+
+    Process {
+
+        if (-not (Test-Path -Path $Path)){
+            Write-FormattedError -Message "The path '$Path' does not exist." -Module $SciProfile.Name
+            return
+        }
+
+        Set-EnvVariable -Name "PATH" -Value $Path -Scope $Scope -Concatenate
+    
+    } 
+}
+
+#   function ----------------------------------------------------------------
+# ---------------------------------------------------------------------------
+function Remove-EnvPath {
+    <#
+    .DESCRIPTION
+        Add a path to environment variable 'PATH'.
+
+    .PARAMETER Name
+
+    .PARAMETER Value
+
+    .PARAMETER Scope
+
+    .EXAMPLE
+        PS C:\> Set-EnvPath -Path 'C:\ProgramData' -Scope 'process'
+
+        -----------
+        Description
+        Add to environment variable 'PATH' the path 'C:\ProgramData' in scope 'process'.
+
+    .OUTPUTS
+        None.
+    #>  
+    
+    [CmdletBinding(PositionalBinding)]
+
+    [OutputType([Boolean])]
+
+    Param(
+        [ValidateSet([ValidateSystemEnvPath])]
+        [Parameter(Position=0, Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName, HelpMessage="Path which shall be added to environment variable 'PATH'")]
+        [System.String] $Path,
+
+        [Parameter(Position=1, HelpMessage="Scope of specified environment variable")]
+        [ValidateSet("process", "machine", "user")]
+        [System.String] $Scope = "process"
+    )
+
+    Process {
+
+        $value = [System.Environment]::GetEnvironmentVariable("Path", $Scope) -Split ';' | Where-Object { $_ -ne $Path } -Join ";"
+
+        Set-EnvVariable -Name "PATH" -Value $value -Scope $Scope
+    } 
 }
 
 # #   function -------------------------------------------------------------------

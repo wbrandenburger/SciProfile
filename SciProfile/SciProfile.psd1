@@ -13,7 +13,7 @@
 RootModule = "SciProfile.psm1"
 
 # Version number of this module.
-ModuleVersion = "0.3.8"
+ModuleVersion = "0.3.9"
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -88,6 +88,7 @@ NestedModules = @("PSModuleUtils\PSModuleUtils.psm1")
 FunctionsToExport = @(
     "Attempt"
     "ActivateSciProfileAutocompletion",
+    "Get-ChildItemSize",
     "Get-ProjectList",
     "New-ConfigurationFile",
     "Set-ProfileProjectList",
@@ -107,7 +108,9 @@ FunctionsToExport = @(
     "Get-EnvVariable",
     "Set-EnvVariable",
     "Test-EnvPath",
-    "Test-Administrator"
+    "Set-EnvPath",
+    "Remove-EnvPath",
+    "Test-Administrator",
     "Get-SciProfileConfig",
     "Edit-SciProfileConfig", 
     "ValidateSciProfileProjectType",
@@ -128,7 +131,8 @@ AliasesToExport = @(
     "dirx",
     "fox",
     "lsx",
-    "ls-env"
+    "ls-env",
+    "gcis",
     "sx",
     "t-env",
     "s-env",
